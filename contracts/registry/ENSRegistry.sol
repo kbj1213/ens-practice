@@ -2,6 +2,12 @@ pragma solidity >=0.8.4;
 
 import "./ENS.sol";
 
+//----------------- notations -------------------
+//name: 'alice.eth' 같은 ENS identifier
+//label 'alice'와 같이 개별적인 name 파트
+//node: name의 해시 value (unique함)
+//resolver: name으로부터 resource로 mapping해주는 컨트랙
+
 /**
  * The ENS registry contract.
  */
@@ -16,7 +22,7 @@ contract ENSRegistry is ENS {
     mapping (bytes32 => Record) records;
     mapping (address => mapping(address => bool)) operators;
 
-    // Permits modifications only by the owner of the specified node.
+    // Permits modifications only by the owner of the specified node.    
     modifier authorised(bytes32 node) {
         address owner = records[node].owner;
         require(owner == msg.sender || operators[owner][msg.sender]);
@@ -72,7 +78,7 @@ contract ENSRegistry is ENS {
      * @param owner The address of the new owner.
      */
     function setSubnodeOwner(bytes32 node, bytes32 label, address owner) public virtual override authorised(node) returns(bytes32) {
-        bytes32 subnode = keccak256(abi.encodePacked(node, label));
+        bytes32 subnode = keccak256(abi.encodePacked(node, label)); // encodePacked: types shorter than 32 bytes are concatenated directly, without padding or sign extension
         _setOwner(subnode, owner);
         emit NewOwner(node, label, owner);
         return subnode;
