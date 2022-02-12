@@ -2,6 +2,8 @@ pragma solidity >=0.8.4;
 
 import "./ENS.sol";
 
+//
+
 /**
  * A registrar that allocates subdomains to the first person to claim them.
  */
@@ -22,7 +24,7 @@ contract FIFSRegistrar {
      */
     constructor(ENS ensAddr, bytes32 node) public {
         ens = ensAddr;
-        rootNode = node;
+        rootNode = node;    
     }
 
     /**

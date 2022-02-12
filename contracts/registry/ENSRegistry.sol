@@ -8,6 +8,14 @@ import "./ENS.sol";
 //node: name의 해시 value (unique함)
 //resolver: name으로부터 resource로 mapping해주는 컨트랙
 
+//records[0x0].owner = msg.sender <<< contract 배포자의 record index는 0x0으로 fix.
+//다시 말하자면 contract 배포자의 node값은 0x0
+
+//mapping (address => mapping(address => bool)) operators;
+//         <owner>     <third party (operator)>
+// third party인 operator가 owner의 모든 ENS records를 manage하는 권한을 주려면 값을 true로 만듬.
+
+
 /**
  * The ENS registry contract.
  */

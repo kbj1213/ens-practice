@@ -12,6 +12,20 @@ import "./profiles/PubkeyResolver.sol";
 import "./profiles/TextResolver.sol";
 import "./Multicallable.sol";
 
+//mapping(address => mapping(address => bool)) private _operatorApprovals;
+//         소유자            operator   허가여부
+
+//------------- function supportsInterface(bytes4 interfaceID) --------------
+//type(IMulticallable).interfaceId 의 의미.
+//컨트랙트 내부의 IMulticallable method의 selector 역할.
+
+//----function isAuthorised(bytes32 node) internal override view returns(bool)----
+//isAuthorised는 각종 resolver들이 상속받는 ResolverBase라는 abstract contract에 declaration만 있음.
+
+//----function ownerOf(uint256 id) external view returns (address)----
+//Namewrapper이 상속받는 ERC1155Fuse 컨트랙에 선언돼있음.
+//Token의 id를 받아서 토큰들 중 해당 id를 가진 token의 주소를 반환해줌. (이게 owner)
+
 interface INameWrapper {
     function ownerOf(uint256 id) external view returns (address);
 }
