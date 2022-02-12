@@ -4,6 +4,34 @@ import "./ENS.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../root/Controllable.sol";
 
+//  function _claimWithResolver
+//  1. reverse node가 records_list 어딘가에 있다.
+//      1)해당 record의 resolver값이 있는 경우
+//          currentResolver가 해당 resolver를 받아옴.
+//          지금 인자로 받아온 resolver가 현재 record에 있는 resolveㄱ와 다르다면 newResolver (인자로 받은 resolver)로 record 업데이트
+//      2)해당 record의 resolver값이 0x0인 경우 (resolver가 없는 경우)
+//          update nono
+//  2. reverse node가 record어딘가에 없는 경우 (resolver값이 0x0인 경우)
+//      update nono
+
+//  function claim의 경우
+//  _claimWithResolver(msg.sender, owner, address(0x0));를 실행하므로
+//  resolver값을 일부러 0x0을 줘서 reverse subdomain의 owner만 바뀌게 만듬.
+//  메세지를 보낸 사람의 이더 주소의 addr.reverse 노드의 ownership을 건드림
+
+//  function claimForAddr
+//  claim과 거의 같음.
+//  차이점은 메세지를 보낸 사람의 이더 주소의 reverse 노드가 아니라
+//  특정 addr의 reverse node를 건드림. --> authorized modifier가 붙음
+
+//  function claimWithResolver
+//  메세지 보낸 사람의 이더 주소의 reverse 노드를 건드림.
+//  owner뿐만 아니라 resolver주소까지 받아서 record를 새로 갱신함.
+
+//  function claimWithResolverForAddr
+//  특정 addr의 reverse node를 건드려서 owner와 resolver주소를 갱신.
+//  --> authorized modifier가 붙음
+
 abstract contract NameResolver {
     function setName(bytes32 node, string memory name) public virtual;
 }
@@ -167,7 +195,7 @@ contract ReverseRegistrar is Ownable, Controllable {
     function sha3HexAddress(address addr) private pure returns (bytes32 ret) {
         assembly {
             for {
-                let i := 40 //주소 순서 거꾸로 담아서 keccak256 연산
+                let i := 40 
             } gt(i, 0) {
 
             } {
@@ -184,6 +212,7 @@ contract ReverseRegistrar is Ownable, Controllable {
     }
 
     /* Internal functions */
+    // addr의 reverse node를 찾아 owner와 resolver를 set하는 함수
     // reverse node가 records_list어딘가의 resolver에 이미 있는지 없는지 확인하고 없으면 새로운 resolver를 갱신해서
     // record에 병합하여 setSubnodeRecord실행.
     function _claimWithResolver(
@@ -192,7 +221,7 @@ contract ReverseRegistrar is Ownable, Controllable {
         address resolver
     ) internal returns (bytes32) {
         bytes32 label = sha3HexAddress(addr);   //addr을 sha3값으로 변환
-        bytes32 node = keccak256(abi.encodePacked(ADDR_REVERSE_NODE, label));   // {reverse addr}{addr.reverse} 의 namehash가 input으로 들어가는 상황
+        bytes32 node = keccak256(abi.encodePacked(ADDR_REVERSE_NODE, label));   // {addr}{addr.reverse} 의 namehash가 input으로 들어가는 상황
         address currentResolver = ens.resolver(node);   
         bool shouldUpdateResolver = (resolver != address(0x0) &&
             resolver != currentResolver);

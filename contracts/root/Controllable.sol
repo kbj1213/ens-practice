@@ -2,6 +2,8 @@ pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+//controllers allows callers to check if the supplied address is authorized as a registrar controller.
+
 contract Controllable is Ownable {
     mapping(address => bool) public controllers;
 

@@ -14,13 +14,13 @@ module.exports = async ({getNamedAccounts, deployments, network}) => {
 
     await deploy('Root', {
         from: deployer,
-        args: [registry.address],
+        args: [registry.address],   //Root contract 배포 시 constructor 인자로 ENSRegistry의 컨트랙 주소 전달
         log: true,
     });
 
     const root = await ethers.getContract('Root');
 
-    let tx = await registry.setOwner(ZERO_HASH, root.address);
+    let tx = await registry.setOwner(ZERO_HASH, root.address);  //0x0 node의 owner를 root contract 주소로 만듬
     console.log(`Setting owner of root node to root contract (tx: ${tx.hash})...`);
     await tx.wait();
     
@@ -32,7 +32,7 @@ module.exports = async ({getNamedAccounts, deployments, network}) => {
         await tx.wait();
     case owner:
         if(!await root.controllers(owner)) {
-            tx = await root.attach(owner).setController(owner, true);
+            tx = await root.attach(owner).setController(owner, true);   //root.attach(owner) --> owner라는 주체로 root contract에 attach
             console.log(`Setting final owner as controller on root contract (tx: ${tx.hash})...`);
             await tx.wait();
         }
