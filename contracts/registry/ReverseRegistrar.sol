@@ -14,23 +14,34 @@ import "../root/Controllable.sol";
 //  2. reverse node가 record어딘가에 없는 경우 (resolver값이 0x0인 경우)
 //      update nono
 
-//  function claim의 경우
+//  function claim(address owner)의 경우
 //  _claimWithResolver(msg.sender, owner, address(0x0));를 실행하므로
 //  resolver값을 일부러 0x0을 줘서 reverse subdomain의 owner만 바뀌게 만듬.
 //  메세지를 보낸 사람의 이더 주소의 addr.reverse 노드의 ownership을 건드림
 
-//  function claimForAddr
+//  function claimForAddr(address addr, address owner)
 //  claim과 거의 같음.
 //  차이점은 메세지를 보낸 사람의 이더 주소의 reverse 노드가 아니라
 //  특정 addr의 reverse node를 건드림. --> authorized modifier가 붙음
 
-//  function claimWithResolver
+//  function claimWithResolver(address owner, address resolver)
 //  메세지 보낸 사람의 이더 주소의 reverse 노드를 건드림.
 //  owner뿐만 아니라 resolver주소까지 받아서 record를 새로 갱신함.
 
-//  function claimWithResolverForAddr
+//  function claimWithResolverForAddr (address addr, address owner, address resolver)
 //  특정 addr의 reverse node를 건드려서 owner와 resolver주소를 갱신.
 //  --> authorized modifier가 붙음
+
+//  function setName(string memory name)
+//  이 메세지를 보낸 사람의 이더 주소의 reverse 노드를 찾아서
+//  owner를 이 컨트랙 주소로, resolver를 defaultResolver로 세팅한 후
+//  defaultResolver에서 이 노드에 대해 name을 매칭시켜줌
+
+//  function setNameForAddr(address addr, address owner, string memory name)
+//  특정 addr의 reverse node를 찾아서 owner를 이 컨트랙 주소로, resolver를 defaultResolver로 세팅한 후
+//  setName 함수와 같이 defaultResolver에서 이 노드에 대해 name 매칭
+//  그리고 나서 ensRegistry의 setSubnodeOwner를 받아, 해당 node의 주인을 인자로 받았던 owner로 바꿈 (바로 전에 owner를 이 컨트랙(ReverseRegistrar)으로 바꿔놨기 때문에 가능)
+
 
 abstract contract NameResolver {
     function setName(bytes32 node, string memory name) public virtual;
