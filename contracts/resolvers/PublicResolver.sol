@@ -21,10 +21,18 @@ import "./Multicallable.sol";
 
 //----function isAuthorised(bytes32 node) internal override view returns(bool)----
 //isAuthorised는 각종 resolver들이 상속받는 ResolverBase라는 abstract contract에 declaration만 있음.
+//특정 node의 owner가 지갑주소일 수도 있고 nameWrapper 컨트랙일 수도 있음.
+//nameWrapper가 owner라면 nameWrapper로 찾아가서 이 node의 주인인 NFT토큰을 찾고 그 NFT의 owner를 갖고옴
 
 //----function ownerOf(uint256 id) external view returns (address)----
 //Namewrapper이 상속받는 ERC1155Fuse 컨트랙에 선언돼있음.
 //Token의 id를 받아서 토큰들 중 해당 id를 가진 token의 주소를 반환해줌. (이게 owner)
+
+//여기 PublicResolver에도 mapping(address => mapping(address => bool)) private _operatorApprovals가 있고
+//ENSRegistry에도 mapping (address => mapping(address => bool)) operators가 있는데,
+//두 컨트랙 모두 function setApprovalForAll(address operator, bool approved)를 갖고 있음.
+//서로 독립적인 것인지, 프론트 단에서 엮어서 한꺼번에 동기화를 시켜주는건지 아직 모르겠음.
+
 
 interface INameWrapper {
     function ownerOf(uint256 id) external view returns (address);

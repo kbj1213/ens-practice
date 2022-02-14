@@ -12,7 +12,7 @@ import "../root/Controllable.sol";
 //      2)해당 record의 resolver값이 0x0인 경우 (resolver가 없는 경우)
 //          update nono
 //  2. reverse node가 record어딘가에 없는 경우 (resolver값이 0x0인 경우)
-//      update nono
+//      update no
 
 //  function claim(address owner)의 경우
 //  _claimWithResolver(msg.sender, owner, address(0x0));를 실행하므로

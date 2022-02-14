@@ -3,6 +3,8 @@ pragma solidity >=0.8.4;
 import "../registry/ENS.sol";
 import "../registry/ReverseRegistrar.sol";
 
+//name mapping을 통해서 node --> name 정보 갖고 있음.
+
 /**
  * @dev Provides a default implementation of a resolver for reverse records,
  * which permits only the owner to update it.

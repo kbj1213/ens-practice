@@ -11,6 +11,28 @@ import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./BytesUtil.sol";
 
+
+//  docs설명 https://github.com/ensdomains/name-wrapper
+
+//  .eth에 붙는 2LD들(ex alice.eth)을 wrapping하고 싶으면, registrar의 setApprovalForAll을 통해 권한 획득을 해야함.
+//  그리고 나서 wrapETH2LD를 call하는 사람이 1) owner가 되거나 2) 권한을 획득할 수 있음.
+//  위의 docs 링크부분에서 이해가 안되는 것이, setApprovalForAll이 registrar에서 실행된다는데
+//  registrar에는 setApprovalForAll 함수가 없다. ENSRegistry를 말하는건지 헷갈림.
+//  .eth말고 다른 확장자의 도메인들이나 .eth의 subdomain들(ex sub.example.eth)은 wrap함수를 call해서 wrapping해야함.
+
+//  Wrapper는 Registry가 갖고 있는 method들 (setSubnodeOwner, setSubnodeRecord, setRecord, setResolver, setTTL)을 모두 갖고 있다.
+//  다만 Transfer는 registry의 setOwner를 똑같이 구현하지 않고 ERC1155의 transfer method를 따름.
+
+//  NameWrapper 컨트랙에서 중요한 개념은 fuse
+//  fuse라는 것은 특정 name에 대한 permission들을 나타내는 데이터
+//  이 컨트랙의 interface인 NameWrapper에 관련 상수들이 선언돼있으며, 하위 7 bits값의 각각이 이를 나타냄.
+//  fuse는 한 번 burn되면 다시 unburned로 되돌릴 방법이 없다.
+//  특정 name의 fuse값이 0라는 것은 그 name에 대해 아무런 제한이 없다는 뜻
+
+//  특정 name의 fuse가 burn되기 전에, 그 부모 name의 replace subdomain의 fuse가 먼저 burn돼야함.
+
+
+
 contract NameWrapper is
     Ownable,
     ERC1155Fuse,
